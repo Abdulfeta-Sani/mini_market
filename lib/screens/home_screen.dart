@@ -4,6 +4,7 @@ import '../data/product_data.dart';
 import '../models/product.dart';
 import '../widgets/product_card.dart';
 import 'add_product_screen.dart';
+import 'cart_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -53,7 +54,12 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CartScreen()),
+              );
+            },
             icon: const Icon(
               Icons.shopping_cart_outlined,
               color: Colors.black87,
