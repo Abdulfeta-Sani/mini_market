@@ -1,12 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:mini_market/models/product.dart';
 
 import '../data/product_data.dart';
+import '../models/product.dart';
 import '../widgets/product_card.dart';
 import 'add_product_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late final List<Product> productList;
+
+  @override
+  void initState() {
+    super.initState();
+    productList = List<Product>.from(products);
+  }
+
+  Future<void> openAddProductScreen() async {
+    final newProduct = await Navigator.push<Product>(
+      context,
+      MaterialPageRoute(builder: (context) => const AddProductScreen()),
+    );
+
+    if (!mounted || newProduct == null) {
+      return;
+    }
+
+    setState(() {
+      productList.add(newProduct);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,44 +52,20 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         actions: [
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.shopping_cart_outlined,
-                  color: Colors.black87,
-                  size: 21,
-                ),
-              ),
-              Positioned(
-                right: 3,
-                top: 5,
-                child: Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Text(
-                    '3',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 8,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.shopping_cart_outlined,
+              color: Colors.black87,
+              size: 21,
+            ),
           ),
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(8, 10, 8, 8),
         child: GridView.builder(
-          itemCount: products.length,
+          itemCount: productList.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 6,
@@ -69,17 +73,12 @@ class HomeScreen extends StatelessWidget {
             childAspectRatio: 0.82,
           ),
           itemBuilder: (context, index) {
-            return ProductCard(product: products[index]);
+            return ProductCard(product: productList[index]);
           },
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push<Product>(
-            context,
-            MaterialPageRoute(builder: (context) => const AddProductScreen()),
-          );
-        },
+        onPressed: openAddProductScreen,
         backgroundColor: const Color(0xffdce4ff),
         foregroundColor: const Color(0xff4e5fd5),
         elevation: 3,
