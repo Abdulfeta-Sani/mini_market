@@ -4,16 +4,22 @@ import '../screens/product_details_screen.dart';
 import '../models/product.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({required this.product, this.onProductUpdated, super.key});
+  const ProductCard({
+    required this.product,
+    this.onProductUpdated,
+    this.onProductDeleted,
+    super.key,
+  });
 
   final Product product;
   final ValueChanged<Product>? onProductUpdated;
+  final VoidCallback? onProductDeleted;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
-        final updatedProduct = await Navigator.push<Product>(
+        final result = await Navigator.push<Object?>(
           context,
           MaterialPageRoute(
             builder: (context) {
@@ -22,8 +28,10 @@ class ProductCard extends StatelessWidget {
           ),
         );
 
-        if (updatedProduct != null) {
-          onProductUpdated?.call(updatedProduct);
+        if (result is Product) {
+          onProductUpdated?.call(result);
+        } else if (result == true) {
+          onProductDeleted?.call();
         }
       },
       child: Card(

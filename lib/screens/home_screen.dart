@@ -80,6 +80,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   productList[index] = updatedProduct;
                 });
               },
+              onProductDeleted: () {
+                setState(() {
+                  productList.removeAt(index);
+                });
+              },
             );
           },
         ),

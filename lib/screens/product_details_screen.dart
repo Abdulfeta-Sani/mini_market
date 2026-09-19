@@ -15,6 +15,40 @@ class ProductDetailsScreen extends StatefulWidget {
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   int quantity = 1;
 
+  Future<void> confirmDelete(Product product) async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Delete product?', style: TextStyle(fontSize: 16)),
+          content: const Text(
+            'This product will be removed from the market.',
+            style: TextStyle(fontSize: 12),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancel', style: TextStyle(fontSize: 11)),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text(
+                'Delete',
+                style: TextStyle(color: Colors.red, fontSize: 11),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (!mounted || shouldDelete != true) {
+      return;
+    }
+
+    Navigator.pop(context, true);
+  }
+
   @override
   Widget build(BuildContext context) {
     final product = widget.product;
@@ -58,7 +92,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             icon: const Icon(Icons.edit_outlined, size: 18),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () => confirmDelete(product),
             icon: const Icon(Icons.delete_outline, color: Colors.red, size: 18),
           ),
         ],
