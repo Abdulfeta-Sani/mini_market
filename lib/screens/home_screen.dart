@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mini_market/models/product.dart';
 
 import '../data/product_data.dart';
 import '../widgets/product_card.dart';
+import 'add_product_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -72,7 +74,12 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push<Product>(
+            context,
+            MaterialPageRoute(builder: (context) => const AddProductScreen()),
+          );
+        },
         backgroundColor: const Color(0xffdce4ff),
         foregroundColor: const Color(0xff4e5fd5),
         elevation: 3,

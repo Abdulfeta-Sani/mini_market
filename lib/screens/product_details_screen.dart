@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/product.dart';
+import 'add_product_screen.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen({required this.product, super.key});
@@ -38,7 +39,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push<Product>(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return AddProductScreen(product: product);
+                  },
+                ),
+              );
+            },
             icon: const Icon(Icons.edit_outlined, size: 18),
           ),
           IconButton(
