@@ -4,9 +4,14 @@ import '../models/product.dart';
 import 'add_product_screen.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
-  const ProductDetailsScreen({required this.product, super.key});
+  const ProductDetailsScreen({
+    required this.product,
+    this.onAddToCart,
+    super.key,
+  });
 
   final Product product;
+  final ValueChanged<Product>? onAddToCart;
 
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
@@ -173,7 +178,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         child: SizedBox(
           height: 44,
           child: FilledButton(
-            onPressed: () {},
+            onPressed: () {
+              widget.onAddToCart?.call(product);
+              Navigator.pop(context);
+            },
             style: FilledButton.styleFrom(
               backgroundColor: const Color(0xff2864e8),
               shape: RoundedRectangleBorder(

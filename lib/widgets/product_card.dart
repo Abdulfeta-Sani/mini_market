@@ -8,12 +8,14 @@ class ProductCard extends StatelessWidget {
     required this.product,
     this.onProductUpdated,
     this.onProductDeleted,
+    this.onProductAdded,
     super.key,
   });
 
   final Product product;
   final ValueChanged<Product>? onProductUpdated;
   final VoidCallback? onProductDeleted;
+  final ValueChanged<Product>? onProductAdded;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,10 @@ class ProductCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) {
-              return ProductDetailsScreen(product: product);
+              return ProductDetailsScreen(
+                product: product,
+                onAddToCart: onProductAdded,
+              );
             },
           ),
         );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../data/product_data.dart';
+import '../models/cart_item.dart';
 import '../models/product.dart';
 import '../widgets/product_card.dart';
 import 'add_product_screen.dart';
@@ -15,6 +16,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final List<Product> productList;
+  final List<CartItem> cartItems = [];
 
   @override
   void initState() {
@@ -37,6 +39,36 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void addProductToCart(Product product) {
+    final existingIndex = cartItems.indexWhere(
+      (item) => item.product.name == product.name,
+    );
+
+    setState(() {
+      if (existingIndex == -1) {
+        cartItems.add(CartItem(product: product));
+      } else {
+        cartItems[existingIndex].quantity++;
+      }
+    });
+  }
+
+  void openCartScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return CartScreen(
+            cartItems: cartItems,
+            onCartChanged: () {
+              setState(() {});
+            },
+          );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,18 +85,38 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const CartScreen()),
-              );
-            },
-            icon: const Icon(
-              Icons.shopping_cart_outlined,
-              color: Colors.black87,
-              size: 21,
-            ),
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              IconButton(
+                onPressed: openCartScreen,
+                icon: const Icon(
+                  Icons.shopping_cart_outlined,
+                  color: Colors.black87,
+                  size: 21,
+                ),
+              ),
+              if (cartItems.isNotEmpty)
+                Positioned(
+                  right: 3,
+                  top: 5,
+                  child: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Text(
+                      '${cartItems.length}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 8,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
           ),
         ],
       ),
@@ -81,6 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
           itemBuilder: (context, index) {
             return ProductCard(
               product: productList[index],
+              onProductAdded: addProductToCart,
               onProductUpdated: (updatedProduct) {
                 setState(() {
                   productList[index] = updatedProduct;
