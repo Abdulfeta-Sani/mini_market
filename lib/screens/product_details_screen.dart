@@ -39,8 +39,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {
-              Navigator.push<Product>(
+            onPressed: () async {
+              final updatedProduct = await Navigator.push<Product>(
                 context,
                 MaterialPageRoute(
                   builder: (context) {
@@ -48,6 +48,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   },
                 ),
               );
+
+              if (!mounted || updatedProduct == null) {
+                return;
+              }
+
+              Navigator.pop(context, updatedProduct);
             },
             icon: const Icon(Icons.edit_outlined, size: 18),
           ),

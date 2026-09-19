@@ -4,15 +4,16 @@ import '../screens/product_details_screen.dart';
 import '../models/product.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({required this.product, super.key});
+  const ProductCard({required this.product, this.onProductUpdated, super.key});
 
   final Product product;
+  final ValueChanged<Product>? onProductUpdated;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+        final updatedProduct = await Navigator.push<Product>(
           context,
           MaterialPageRoute(
             builder: (context) {
@@ -20,6 +21,10 @@ class ProductCard extends StatelessWidget {
             },
           ),
         );
+
+        if (updatedProduct != null) {
+          onProductUpdated?.call(updatedProduct);
+        }
       },
       child: Card(
         margin: EdgeInsets.zero,

@@ -73,7 +73,14 @@ class _HomeScreenState extends State<HomeScreen> {
             childAspectRatio: 0.82,
           ),
           itemBuilder: (context, index) {
-            return ProductCard(product: productList[index]);
+            return ProductCard(
+              product: productList[index],
+              onProductUpdated: (updatedProduct) {
+                setState(() {
+                  productList[index] = updatedProduct;
+                });
+              },
+            );
           },
         ),
       ),
